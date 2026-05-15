@@ -14,14 +14,13 @@ export function ProductGrid({ onProductAdded }: ProductGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const add = useCartStore(s => s.add);
 
-  const products = useLiveQuery(
-    () =>
-      db.products
-        .where('isActive')
-        .equals(1)
-        .sortBy('name'),
-    []
-  );
+  const products = useLiveQuery(async () => {
+  const rows = await db.products.toArray();
+
+  return rows
+    .filter(p => p.isActive === true)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}, []);
 
   const categories = React.useMemo(() => {
     if (!products) return [];
