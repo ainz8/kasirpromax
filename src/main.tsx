@@ -1,64 +1,67 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { AppShell } from '@/components';
-import { useAppStore } from '@/store/appStore';
-import { runMigration } from '@/db/migrate';
+
 import './index.css';
 
-import { InventoryView } from '@/features/inventory';
+import AppShell from './components/AppShell';
+import Toast from './components/Toast';
 
-// POS view (placeholder)
-function POSView() {
-  return <div className="p-4">🛒 POS - Belum diimplementasi</div>;
-}
+import { useAppStore } from './store/appStore';
 
-// History view
-function HistoryView() {
-  return <div className="p-4">📋 Riwayat - Belum diimplementasi</div>;
-}
+import { InventoryView } from './features/inventory';
+import { POSView } from './features/pos';
 
-// Reports view
-function ReportsView() {
-  return <div className="p-4">📊 Laporan - Belum diimplementasi</div>;
-}
-
-// Settings view
-function SettingsView() {
-  return <div className="p-4">⚙️ Seting - Belum diimplementasi</div>;
-}
-
-// Customers view
-function CustomersView() {
-  return <div className="p-4">👥 Pelanggan - Belum diimplementasi</div>;
+function PlaceholderView({ title }: { title: string }) {
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">{title}</h1>
+      <p className="text-gray-500 mt-2">Belum diimplementasi</p>
+    </div>
+  );
 }
 
 function App() {
-  const view = useAppStore(s => s.view);
+  const view = useAppStore((s) => s.view);
+  const toasts = useAppStore((s) => s.toasts);
 
   const renderView = () => {
     switch (view) {
       case 'pos':
         return <POSView />;
+
       case 'inventory':
         return <InventoryView />;
+
       case 'history':
-        return <HistoryView />;
+        return <PlaceholderView title="📋 Riwayat" />;
+
       case 'reports':
-        return <ReportsView />;
+        return <PlaceholderView title="📊 Laporan" />;
+
       case 'settings':
-        return <SettingsView />;
-      case 'customers':
-        return <CustomersView />;
+        return <PlaceholderView title="⚙️ Setting" />;
+
       default:
         return <POSView />;
     }
   };
 
-  return <AppShell>{renderView()}</AppShell>;
-}
+  return (
+    <AppShell>
+      {renderView()}
 
-// Initialize migration on app start
-runMigration().catch(err => console.error('Migration error:', err));
+      <div className="fixed top-4 right-4 z-50 space-y-2">
+        {toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+          />
+        ))}
+      </div>
+    </AppShell>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
