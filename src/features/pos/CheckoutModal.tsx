@@ -57,11 +57,14 @@ export function CheckoutModal() {
       );
       clear();
       closeCheckout();
-    } catch (err: any) {
-      toast.error(err.message || 'Checkout gagal');
-    } finally {
-      setIsProcessing(false);
-    }
+    } catch (err) {
+  const message =
+    err instanceof Error ? err.message : 'Checkout gagal';
+
+  toast.error(message);
+} finally {
+  setIsProcessing(false);
+}
   };
 
   if (!isOpen) return null;
