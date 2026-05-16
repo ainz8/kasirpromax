@@ -1,12 +1,35 @@
 # Dependencies
 backend/node_modules/
+node_modules/
 
 # Environment (JANGAN di-commit, berisi password!)
 backend/.env
+.env
+.env.local
+.env.*.local
+.env.production
 
 # Data lokal (sudah pindah ke MongoDB, folder ini tidak dipakai)
 backend/data/
 
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
 # OS files
 .DS_Store
 Thumbs.db
+.windows-build-tools
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+dist/
+build/
